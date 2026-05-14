@@ -73,6 +73,13 @@ export type Messages = {
       /** 链接展示文案（与 repoHref 成对使用） */
       repoLinkText?: string;
     }[];
+    /** 与主项目卡区分：轻量 toy / 实验仓合集 */
+    toyShelf: {
+      badge: string;
+      title: string;
+      description: string;
+      links: { label: string; href: string }[];
+    };
   };
   research: {
     label: string;
@@ -206,6 +213,16 @@ export const messages: Record<Lang, Messages> = {
           repoLinkText: "GitHub 仓库 →",
         },
       ],
+      toyShelf: {
+        badge: "Toy projects",
+        title: "轻量实验与小仓库",
+        description:
+          "把大模型接进量化研究工作流，以及 On-Call 场景的检索与 Agent 演示。体量不大、接口直白，便于按需拆解或当模块参考。",
+        links: [
+          { label: "LLM 增强的研究工作流", href: "https://github.com/lvmingjin77-ui/tenxai" },
+          { label: "On-Call Agent 助手", href: "https://github.com/lvmingjin77-ui/OnCallAgent" },
+        ],
+      },
     },
     research: {
       label: "",
@@ -385,6 +402,16 @@ export const messages: Record<Lang, Messages> = {
           repoLinkText: "GitHub →",
         },
       ],
+      toyShelf: {
+        badge: "Toy projects",
+        title: "Toy experiments & small repos",
+        description:
+          "LLM in a quant research workflow, plus search and an agent for on-call style SOPs. Small surface area and readable wiring—easy to fork or borrow patterns from.",
+        links: [
+          { label: "LLM-augmented quant research workflow", href: "https://github.com/lvmingjin77-ui/tenxai" },
+          { label: "On-call assistant agent", href: "https://github.com/lvmingjin77-ui/OnCallAgent" },
+        ],
+      },
     },
     research: {
       label: "",

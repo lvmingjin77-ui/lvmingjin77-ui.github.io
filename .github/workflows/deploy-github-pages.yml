@@ -1,31 +1,35 @@
-# 推送 main/master 后构建 Vite 产物并发布到 GitHub Pages（需在仓库 Settings → Pages → Source 选 GitHub Actions）
+# 推送 main/master 或手动运行时：构建 dist 并发布到 GitHub Pages
+# 仓库 Settings → Pages → Build and deployment → Source 选「GitHub Actions」
 name: Deploy GitHub Pages
 
 on:
   push:
     branches: [main, master]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
+  # deploy-pages 拉取 build 工件时可能需要
+  actions: read
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "24"
           cache: npm
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 

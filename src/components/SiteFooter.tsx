@@ -7,13 +7,16 @@ type SiteFooterProps = {
 };
 
 export function SiteFooter({ t }: SiteFooterProps) {
+  const contactLead = t.contact.line.trim();
   return (
     <footer id="contact" className="scroll-mt-20 bg-canvas pb-12 pt-14 dark:bg-canvas-ink sm:pb-14 sm:pt-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal>
           <SectionHeading>{t.contact.label}</SectionHeading>
-          <p className="mt-6 w-full max-w-none text-xl leading-relaxed text-canvas-ink/88 dark:text-[#c9c6c0] sm:text-[1.35rem]">{t.contact.line}</p>
-          <dl className="mt-8 grid gap-6 sm:grid-cols-3 sm:gap-8">
+          {contactLead ? (
+            <p className="mt-6 w-full max-w-none text-xl leading-relaxed text-canvas-ink/88 dark:text-[#c9c6c0] sm:text-[1.35rem]">{t.contact.line}</p>
+          ) : null}
+          <dl className={`grid gap-6 sm:grid-cols-3 sm:gap-8 ${contactLead ? "mt-8" : "mt-6"}`}>
             {t.contact.footerChannels.map((ch) => {
               const openExternal = ch.href.startsWith("https://");
               return (

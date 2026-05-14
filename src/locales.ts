@@ -293,8 +293,7 @@ export const messages: Record<Lang, Messages> = {
     },
     contact: {
       label: "联络",
-      line:
-        "欢迎优先通过下方学校邮箱联系；也可使用个人邮箱或电话沟通校招、实习与课题合作。完整简历 PDF 可在页面顶部「联系方式」区块下载。邮箱链接会在 Gmail 网页版新标签页打开撰写（需登录 Google）。",
+      line: "",
       emailWebComposeHint: "在 Gmail 网页中新标签页打开撰写（需登录 Google）",
       footerChannels: [
         {
@@ -482,8 +481,7 @@ export const messages: Record<Lang, Messages> = {
     },
     contact: {
       label: "Contact",
-      line:
-        "Prefer the school email below for campus hiring, internships, or collaborations; personal email and phone are also listed. The PDF résumé is linked in the contact block at the top of the page. Email links open Gmail compose in a new tab (Google sign-in required).",
+      line: "",
       emailWebComposeHint: "Opens Gmail compose in a new tab (Google sign-in required)",
       footerChannels: [
         {

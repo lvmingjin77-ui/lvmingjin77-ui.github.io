@@ -167,6 +167,8 @@ export const messages: Record<Lang, Messages> = {
             "跨市场量化：构建异质化智能体对多维数据做策略模拟与分级权重，为上层智能体提供多维度决策依据，缓解单一智能体回测风险；设计底层多智能体动态博弈以稳定收益表现。A 股场景下采用双 Agent：数据 Agent 采集行情与资讯并生成报告，决策 Agent 完成筛选、风控与模拟交易，对接妙想金融 API、AkShare 等构建数据 Pipeline。",
           bullets: ["跨市场多智能体决策", "双 Agent 投研流水线"],
           tags: ["Multi-Agent", "Python", "FinTech", "API"],
+          repoHref: "https://github.com/lvmingjin77-ui/EggyTrading",
+          repoLinkText: "GitHub 仓库 →",
         },
         {
           title: "面向多元运动模式的轨迹推理方法研究",
@@ -355,6 +357,8 @@ export const messages: Record<Lang, Messages> = {
             "Cross-market setup with heterogeneous agents for strategy simulation and tiered weighting; dual-agent A-share stack with a data agent for ingestion/reporting and a decision agent for screening, risk checks, and simulated trading (Miaoxiang API, AkShare, etc.).",
           bullets: ["Heterogeneous multi-agent decisions", "Dual-agent research pipeline"],
           tags: ["Multi-agent", "Python", "FinTech"],
+          repoHref: "https://github.com/lvmingjin77-ui/EggyTrading",
+          repoLinkText: "GitHub →",
         },
         {
           title: "Trajectory reasoning with MoE + SSM",

@@ -17,3 +17,9 @@ export function gmailComposeHref(email: string): string {
 
 /** 证件照：放在 public/ 下 */
 export const PROFILE_PHOTO_SRC = "/证件照.jpg";
+
+/** 本机累计点赞数（localStorage，按浏览器分别统计） */
+export const LIKE_COUNT_KEY = "pp-hero-like-count";
+
+/** 本机是否已点赞（localStorage） */
+export const LIKE_STORAGE_KEY = "pp-hero-liked";

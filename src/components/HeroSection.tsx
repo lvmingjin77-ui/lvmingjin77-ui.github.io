@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import type { Messages } from "../locales";
 import { resolveContactItem, resolveHeroEmailRow } from "../locales";
 import { SITE_EMAIL } from "../constants";
+import { HeroLikeBar } from "./HeroLikeBar";
 import { ProfilePhoto } from "./ProfilePhoto";
 
 type HeroSectionProps = {
@@ -49,6 +50,11 @@ export function HeroSection({ t }: HeroSectionProps) {
                   </li>
                 ))}
               </ul>
+              <HeroLikeBar
+                likeButton={t.hero.likeBar.likeButton}
+                unlikeButton={t.hero.likeBar.unlikeButton}
+                totalSuffix={t.hero.likeBar.totalSuffix}
+              />
             </div>
           </motion.div>
 
@@ -89,14 +95,37 @@ export function HeroSection({ t }: HeroSectionProps) {
                 {t.hero.blurb}
               </motion.p>
             ) : null}
-            <motion.p
-              className={`font-mono text-[0.95rem] leading-relaxed tracking-wide text-canvas-ink/65 dark:text-[#a5a19a] sm:text-base ${showIntroBlock ? "mt-3" : "mt-4"}`}
+            <motion.div
+              className={`grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-6 lg:grid-cols-3 lg:gap-x-12 ${showIntroBlock ? "mt-3" : "mt-4"}`}
               initial={reduce ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.15 }}
             >
-              {t.hero.skills}
-            </motion.p>
+              {t.hero.skillGroups.map((group, i) => (
+                <div
+                  key={group.label}
+                  className={
+                    i > 0
+                      ? "border-t border-canvas-ink/[0.08] pt-6 sm:border-t-0 sm:pt-0 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0 dark:border-white/[0.08]"
+                      : undefined
+                  }
+                >
+                  <p className="flex items-center gap-2.5 font-display text-[1.0625rem] font-semibold leading-none tracking-tight text-canvas-ink dark:text-[#ebe9e6]">
+                    <span className="h-3.5 w-0.5 shrink-0 rounded-full bg-accent/75 dark:bg-accent-light/80" aria-hidden />
+                    {group.label}
+                  </p>
+                  <ul className="mt-3 flex flex-wrap gap-2">
+                    {group.items.map((item) => (
+                      <li key={item}>
+                        <span className="inline-block rounded-md border border-canvas-ink/[0.1] bg-white/50 px-2.5 py-1 font-mono text-[0.8125rem] font-medium leading-none tracking-wide text-canvas-ink/78 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#c4c1bc]">
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </motion.div>
 
             <motion.div
               className="mt-8 border-t border-canvas-ink/[0.1] pt-6 dark:border-white/[0.1]"
@@ -167,7 +196,7 @@ export function HeroSection({ t }: HeroSectionProps) {
             </motion.div>
 
             <motion.p
-              className="mt-8 max-w-2xl border-l-2 border-accent pl-4 text-lg leading-relaxed text-canvas-ink/72 dark:border-accent-light dark:text-[#a8a49e]"
+              className="mt-8 border-l-2 border-accent pl-4 text-lg leading-relaxed text-canvas-ink/72 dark:border-accent-light dark:text-[#a8a49e]"
               initial={reduce ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.22 }}

@@ -51,13 +51,18 @@ export type Messages = {
     name: string;
     lede: string;
     blurb: string;
-    skills: string;
+    skillGroups: { label: string; items: string[] }[];
     contactIntro: string;
     emailsBlock: { label: string; items: HeroEmailRow[] };
     contactItems: ContactItem[];
     availability: string;
     /** 照片下方研究方向小版块 */
     researchFocus: { label: string; items: string[] };
+    likeBar: {
+      likeButton: string;
+      unlikeButton: string;
+      totalSuffix: string;
+    };
   };
   work: {
     label: string;
@@ -135,8 +140,11 @@ export const messages: Record<Lang, Messages> = {
       name: "吕明锦",
       lede: "",
       blurb: "",
-      skills:
-        "Python · C++ · PyTorch · 多智能体（Multi-Agent）· AI Agent / AI Coding Agent · 计算机视觉 · 强化学习（SFT / GRPO）· Stable Diffusion / VAR · Linux · Git",
+      skillGroups: [
+        { label: "工程", items: ["Python", "C++", "Linux", "Git"] },
+        { label: "深度学习", items: ["PyTorch", "计算机视觉", "SFT / GRPO"] },
+        { label: "智能体", items: ["Multi-Agent", "AI Agent", "AI Coding Agent"] },
+      ],
       contactIntro: "联系方式",
       emailsBlock: {
         label: "邮箱",
@@ -154,6 +162,11 @@ export const messages: Record<Lang, Messages> = {
       researchFocus: {
         label: "研究方向",
         items: ["多智能体编排", "多目标跟踪"],
+      },
+      likeBar: {
+        likeButton: "点赞",
+        unlikeButton: "取消点赞",
+        totalSuffix: "累计获赞",
       },
     },
     work: {
@@ -325,8 +338,11 @@ export const messages: Record<Lang, Messages> = {
       name: "Mingjin Lü",
       lede: "",
       blurb: "",
-      skills:
-        "Python · C++ · PyTorch · Multi-agent systems · AI / coding agents · Computer vision · RL (SFT / GRPO) · Stable Diffusion / VAR · Linux · Git",
+      skillGroups: [
+        { label: "Engineering", items: ["Python", "C++", "Linux", "Git"] },
+        { label: "Deep learning", items: ["PyTorch", "Computer vision", "SFT / GRPO"] },
+        { label: "Agents", items: ["Multi-agent systems", "AI / coding agents"] },
+      ],
       contactIntro: "Contact",
       emailsBlock: {
         label: "Email",
@@ -344,6 +360,11 @@ export const messages: Record<Lang, Messages> = {
       researchFocus: {
         label: "Research focus",
         items: ["Multi-agent orchestration", "Multi-object tracking"],
+      },
+      likeBar: {
+        likeButton: "Like",
+        unlikeButton: "Unlike",
+        totalSuffix: "likes total",
       },
     },
     work: {

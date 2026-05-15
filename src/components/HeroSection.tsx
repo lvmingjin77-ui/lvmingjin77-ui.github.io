@@ -54,6 +54,7 @@ export function HeroSection({ t }: HeroSectionProps) {
                 likeButton={t.hero.likeBar.likeButton}
                 unlikeButton={t.hero.likeBar.unlikeButton}
                 totalSuffix={t.hero.likeBar.totalSuffix}
+                unavailableHint={t.hero.likeBar.unavailableHint}
               />
             </div>
           </motion.div>

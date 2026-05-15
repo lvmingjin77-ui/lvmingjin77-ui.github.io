@@ -1,26 +1,18 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { useCallback, useState } from "react";
-import { LIKE_COUNT_KEY, LIKE_STORAGE_KEY } from "../constants";
+import { useCallback, useEffect, useState } from "react";
+import { LIKE_STORAGE_KEY } from "../constants";
+import { decrementLikeCount, fetchLikeCount, incrementLikeCount } from "../lib/likeCounter";
 
 type HeroLikeBarProps = {
   likeButton: string;
   unlikeButton: string;
   totalSuffix: string;
+  unavailableHint: string;
 };
 
 function formatCount(count: number) {
   const locale = document.documentElement.lang.startsWith("zh") ? "zh-CN" : "en";
   return new Intl.NumberFormat(locale).format(count);
-}
-
-function readLikeCount(): number {
-  try {
-    const raw = localStorage.getItem(LIKE_COUNT_KEY);
-    const n = raw ? Number.parseInt(raw, 10) : 0;
-    return Number.isFinite(n) && n >= 0 ? n : 0;
-  } catch {
-    return 0;
-  }
 }
 
 function readHasLiked(): boolean {
@@ -50,45 +42,72 @@ function HeartIcon({ filled, className }: { filled: boolean; className?: string 
   );
 }
 
-export function HeroLikeBar({ likeButton, unlikeButton, totalSuffix }: HeroLikeBarProps) {
+export function HeroLikeBar({ likeButton, unlikeButton, totalSuffix, unavailableHint }: HeroLikeBarProps) {
   const reduce = useReducedMotion();
-  const [count, setCount] = useState(readLikeCount);
+  const [count, setCount] = useState<number | null>(null);
   const [hasLiked, setHasLiked] = useState(readHasLiked);
+  const [busy, setBusy] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
 
-  const onToggle = useCallback(() => {
-    if (hasLiked) {
-      const next = Math.max(0, readLikeCount() - 1);
-      setCount(next);
-      setHasLiked(false);
-      try {
-        localStorage.setItem(LIKE_COUNT_KEY, String(next));
-        localStorage.removeItem(LIKE_STORAGE_KEY);
-      } catch {
-        /* ignore */
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const value = await fetchLikeCount();
+      if (cancelled) return;
+      if (value === null) {
+        setUnavailable(true);
+        setCount(0);
+      } else {
+        setCount(value);
+        setUnavailable(false);
       }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const onToggle = useCallback(async () => {
+    if (busy) return;
+    setBusy(true);
+    setUnavailable(false);
+
+    const nextHasLiked = !hasLiked;
+    const value = nextHasLiked ? await incrementLikeCount() : await decrementLikeCount();
+
+    setBusy(false);
+
+    if (value === null) {
+      setUnavailable(true);
       return;
     }
-    const next = readLikeCount() + 1;
-    setCount(next);
-    setHasLiked(true);
+
+    setCount(value);
+    setHasLiked(nextHasLiked);
     try {
-      localStorage.setItem(LIKE_COUNT_KEY, String(next));
-      localStorage.setItem(LIKE_STORAGE_KEY, "1");
+      if (nextHasLiked) {
+        localStorage.setItem(LIKE_STORAGE_KEY, "1");
+      } else {
+        localStorage.removeItem(LIKE_STORAGE_KEY);
+      }
     } catch {
       /* ignore */
     }
-  }, [hasLiked]);
+  }, [busy, hasLiked]);
 
   const actionLabel = hasLiked ? unlikeButton : likeButton;
+  const displayCount = count ?? 0;
 
   return (
-    <div className="mt-6 w-full">
+    <motion.div className="mt-6 w-full">
       <button
         type="button"
-        onClick={onToggle}
+        onClick={() => void onToggle()}
+        disabled={busy || (unavailable && count === null)}
         aria-pressed={hasLiked}
         aria-label={actionLabel}
-        className="group relative w-full overflow-hidden rounded-xl border border-canvas-ink/[0.09] bg-gradient-to-br from-white/80 via-surface/90 to-surface px-3.5 py-3 text-left shadow-[0_1px_0_rgba(20,20,24,0.05),0_8px_24px_-14px_rgba(20,20,24,0.12)] transition-[border-color,box-shadow,transform] duration-300 hover:border-accent/25 hover:shadow-[0_1px_0_rgba(67,56,202,0.08),0_12px_28px_-12px_rgba(67,56,202,0.18)] active:scale-[0.98] dark:border-white/[0.09] dark:from-white/[0.06] dark:via-surface-dark/95 dark:to-surface-dark dark:shadow-[0_1px_0_rgba(255,255,255,0.04),0_10px_28px_-12px_rgba(0,0,0,0.45)] dark:hover:border-accent-light/25 dark:hover:shadow-[0_1px_0_rgba(165,180,252,0.1),0_14px_32px_-10px_rgba(0,0,0,0.55)]"
+        aria-busy={busy}
+        className="group relative w-full overflow-hidden rounded-xl border border-canvas-ink/[0.09] bg-gradient-to-br from-white/80 via-surface/90 to-surface px-3.5 py-3 text-left shadow-[0_1px_0_rgba(20,20,24,0.05),0_8px_24px_-14px_rgba(20,20,24,0.12)] transition-[border-color,box-shadow,transform] duration-300 hover:border-accent/25 hover:shadow-[0_1px_0_rgba(67,56,202,0.08),0_12px_28px_-12px_rgba(67,56,202,0.18)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 dark:border-white/[0.09] dark:from-white/[0.06] dark:via-surface-dark/95 dark:to-surface-dark dark:shadow-[0_1px_0_rgba(255,255,255,0.04),0_10px_28px_-12px_rgba(0,0,0,0.55)] dark:hover:border-accent-light/25 dark:hover:shadow-[0_1px_0_rgba(165,180,252,0.1),0_14px_32px_-10px_rgba(0,0,0,0.55)]"
       >
         <span
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent opacity-70 dark:via-accent-light/35"
@@ -114,10 +133,10 @@ export function HeroLikeBar({ likeButton, unlikeButton, totalSuffix }: HeroLikeB
 
           <span className="min-w-0 flex-1">
             <span className="block font-display text-[1.3125rem] font-semibold leading-none tabular-nums tracking-tight text-canvas-ink dark:text-[#ebe9e6]">
-              {formatCount(count)}
+              {count === null ? "…" : formatCount(displayCount)}
             </span>
             <span className="mt-1 block text-[0.8125rem] leading-snug text-canvas-ink/55 dark:text-[#9a968f]">
-              {totalSuffix}
+              {unavailable ? unavailableHint : totalSuffix}
             </span>
           </span>
         </span>
@@ -132,10 +151,10 @@ export function HeroLikeBar({ likeButton, unlikeButton, totalSuffix }: HeroLikeB
               hasLiked ? "text-accent dark:text-accent-light" : "text-canvas-ink/60 group-hover:text-accent dark:text-[#a5a19a] dark:group-hover:text-accent-light"
             }`}
           >
-            {actionLabel}
+            {busy ? "…" : actionLabel}
           </span>
         </span>
       </button>
-    </div>
+    </motion.div>
   );
 }

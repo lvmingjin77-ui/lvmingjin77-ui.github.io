@@ -62,6 +62,7 @@ export type Messages = {
       likeButton: string;
       unlikeButton: string;
       totalSuffix: string;
+      unavailableHint: string;
     };
   };
   work: {
@@ -167,6 +168,7 @@ export const messages: Record<Lang, Messages> = {
         likeButton: "点赞",
         unlikeButton: "取消点赞",
         totalSuffix: "累计获赞",
+        unavailableHint: "计数暂不可用，请稍后再试",
       },
     },
     work: {
@@ -365,6 +367,7 @@ export const messages: Record<Lang, Messages> = {
         likeButton: "Like",
         unlikeButton: "Unlike",
         totalSuffix: "likes total",
+        unavailableHint: "Count unavailable — try again later",
       },
     },
     work: {

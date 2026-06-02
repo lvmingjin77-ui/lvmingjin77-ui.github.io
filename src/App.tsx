@@ -3,6 +3,7 @@ import type { Lang } from "./locales";
 import { messages } from "./locales";
 import { Header } from "./components/Header";
 import { HeroSection } from "./components/HeroSection";
+import { NewsSection } from "./components/NewsSection";
 import { WorkBento } from "./components/WorkBento";
 import { ResearchSection } from "./components/ResearchSection";
 import { ExperienceSection } from "./components/ExperienceSection";
@@ -36,8 +37,15 @@ export default function App() {
   useEffect(() => {
     document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
     document.title = t.meta.title;
+    let description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (!description) {
+      description = document.createElement("meta");
+      description.name = "description";
+      document.head.appendChild(description);
+    }
+    description.content = t.meta.description;
     localStorage.setItem(LANG_KEY, lang);
-  }, [lang, t.meta.title]);
+  }, [lang, t.meta.description, t.meta.title]);
 
   const toggleLang = useCallback(() => {
     setLang((l) => (l === "zh" ? "en" : "zh"));
@@ -55,10 +63,10 @@ export default function App() {
   }, [toggleLang]);
 
   return (
-    <div className="min-h-screen bg-canvas text-base dark:bg-canvas-ink">
+    <div className="min-h-screen bg-canvas text-base text-ink">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-24 focus:z-[100] focus:border focus:border-canvas-ink focus:bg-canvas focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:uppercase focus:tracking-wider focus:text-canvas-ink dark:focus:border-white dark:focus:bg-canvas-ink dark:focus:text-[#e8e6e3]"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-24 focus:z-[100] focus:border focus:border-ink focus:bg-canvas focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:uppercase focus:tracking-wider focus:text-ink"
       >
         {lang === "zh" ? "跳到主内容" : "Skip to content"}
       </a>
@@ -73,9 +81,10 @@ export default function App() {
 
       <main id="main">
         <HeroSection t={t} />
-        <ExperienceSection t={t} />
-        <WorkBento t={t} />
+        <NewsSection t={t} />
         <ResearchSection t={t} />
+        <WorkBento t={t} />
+        <ExperienceSection t={t} />
         <SiteFooter t={t} />
       </main>
     </div>

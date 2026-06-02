@@ -2,17 +2,14 @@ import type { ReactNode } from "react";
 
 type SectionHeadingProps = {
   children: ReactNode;
+  label?: string;
 };
 
-/** 左侧彩色条 + 区块主标题（替代小号 eyebrow 文案） */
-export function SectionHeading({ children }: SectionHeadingProps) {
+export function SectionHeading({ children, label }: SectionHeadingProps) {
   return (
-    <div className="flex items-start gap-4 sm:gap-5">
-      <span
-        className="mt-[0.35em] h-12 w-1.5 shrink-0 rounded-full bg-gradient-to-b from-accent via-accent to-accent-muted sm:h-14 dark:from-accent-light dark:via-accent-light dark:to-accent/55"
-        aria-hidden
-      />
-      <h2 className="max-w-4xl font-display text-display-lg text-canvas-ink dark:text-[#f2f1ee]">{children}</h2>
+    <div className="min-w-0">
+      {label ? <p className="font-mono text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-accent">{label}</p> : null}
+      <h2 className="mt-1 font-display text-2xl font-semibold text-ink sm:text-[1.7rem]">{children}</h2>
     </div>
   );
 }

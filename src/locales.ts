@@ -10,9 +10,7 @@ export type TimelineDetailBlock = {
 export type TimelineEntry = {
   period: string;
   title: string;
-  /** 单段说明；与 detailBlocks 二选一展示时优先使用 detailBlocks */
   detail: string;
-  /** 分块排版（如成绩 / 英语 / 获奖） */
   detailBlocks?: TimelineDetailBlock[];
 };
 
@@ -22,33 +20,49 @@ export type ContactItem = {
   href?: string;
 };
 
-/** Hero 邮箱块中单条（value / href 可含 EMAIL_TOKEN） */
 export type HeroEmailRow = {
   value: string;
   href: string;
 };
 
+export type ProfileLink = {
+  label: string;
+  value: string;
+  href: string;
+};
+
+export type NewsItem = {
+  date: string;
+  text: string;
+  href?: string;
+};
+
+export type PaperLink = {
+  label: string;
+  href: string;
+};
+
 export type Paper = {
   title: string;
+  authors: string;
   venue: string;
+  year: string;
   authorRole: string;
   summary: string;
   href?: string;
-  /** 摘要下方外链文案，如「在 arXiv 查看」 */
-  linkText?: string;
-  /** 卡片右侧配图（public 下路径，如 /GateMOT.png） */
+  links: PaperLink[];
   imageSrc?: string;
-  /** 配图 alt 文案 */
   imageAlt?: string;
 };
 
 export type Messages = {
-  meta: { title: string };
-  nav: { work: string; research: string; experience: string; contact: string };
+  meta: { title: string; description: string };
+  nav: { about: string; research: string; work: string; experience: string; contact: string; cv: string };
   hero: {
     photoAlt: string;
     status: string;
     name: string;
+    role: string;
     lede: string;
     blurb: string;
     skillGroups: { label: string; items: string[] }[];
@@ -56,30 +70,28 @@ export type Messages = {
     emailsBlock: { label: string; items: HeroEmailRow[] };
     contactItems: ContactItem[];
     availability: string;
-    /** 照片下方研究方向小版块 */
     researchFocus: { label: string; items: string[] };
-    likeBar: {
-      likeButton: string;
-      unlikeButton: string;
-      totalSuffix: string;
-      unavailableHint: string;
-    };
+    profileLinks: ProfileLink[];
+    highlights: string[];
+    quickFacts: { label: string; value: string }[];
+  };
+  news: {
+    headline: string;
+    items: NewsItem[];
   };
   work: {
     label: string;
     headline: string;
+    intro: string;
     items: {
       title: string;
       context: string;
       summary: string;
       bullets: string[];
       tags: string[];
-      /** 可选：开源仓库链接 */
       repoHref?: string;
-      /** 链接展示文案（与 repoHref 成对使用） */
       repoLinkText?: string;
     }[];
-    /** 与主项目卡区分：轻量 toy / 实验仓合集 */
     toyShelf: {
       badge: string;
       title: string;
@@ -90,6 +102,7 @@ export type Messages = {
   research: {
     label: string;
     headline: string;
+    intro: string;
     papers: Paper[];
   };
   experience: {
@@ -103,9 +116,7 @@ export type Messages = {
   contact: {
     label: string;
     line: string;
-    /** 邮箱链到 Gmail 网页撰写时的说明（title / 无障碍） */
     emailWebComposeHint: string;
-    /** 页脚完整联络方式（邮箱、电话等） */
     footerChannels: { label: string; value: string; href: string }[];
   };
 };
@@ -131,24 +142,40 @@ export function resolveHeroEmailRow(row: HeroEmailRow, email: string): HeroEmail
   };
 }
 
+export function resolveProfileLink(link: ProfileLink, email: string): ProfileLink {
+  return {
+    ...link,
+    value: withEmail(link.value, email),
+    href: withEmail(link.href, email),
+  };
+}
+
+const githubHref = "https://github.com/lvmingjin77-ui";
+const paperHref = "https://arxiv.org/abs/2604.26353";
+
 export const messages: Record<Lang, Messages> = {
   zh: {
-    meta: { title: "吕明锦 — 算法与智能系统" },
-    nav: { work: "项目", research: "论文", experience: "经历", contact: "联络" },
+    meta: {
+      title: "吕明锦 | 计算机视觉与多智能体系统",
+      description: "吕明锦，华中科技大学计算机技术硕士在读，研究方向包括多目标跟踪、视觉模型与多智能体系统。",
+    },
+    nav: { about: "主页", research: "论文", work: "项目", experience: "经历", contact: "联络", cv: "CV" },
     hero: {
       photoAlt: "吕明锦证件照",
-      status: "武汉 · 华中科技大学 · 计算机技术硕士在读",
+      status: "华中科技大学 · 计算机技术硕士在读",
       name: "吕明锦",
-      lede: "",
-      blurb: "",
+      role: "M.Sc. Student in Computer Technology",
+      lede: "研究计算机视觉中的多目标跟踪、轨迹推理，以及面向复杂任务的多智能体系统编排。",
+      blurb:
+        "我关注可复现实验与可落地系统之间的连接：一方面做高密度目标跟踪和运动建模，另一方面探索 Agent 在金融投研、自动化决策与工程工作流中的稳定部署。",
       skillGroups: [
-        { label: "工程", items: ["Python", "C++", "Linux", "Git"] },
-        { label: "深度学习", items: ["PyTorch", "计算机视觉", "SFT / GRPO"] },
-        { label: "智能体", items: ["Multi-Agent", "AI Agent", "AI Coding Agent"] },
+        { label: "Research", items: ["Multi-Object Tracking", "Trajectory Reasoning", "Multi-Agent Systems"] },
+        { label: "Methods", items: ["Attention", "MoE", "SSM", "SFT / GRPO"] },
+        { label: "Engineering", items: ["Python", "C++", "PyTorch", "Linux"] },
       ],
-      contactIntro: "联系方式",
+      contactIntro: "Quick links",
       emailsBlock: {
-        label: "邮箱",
+        label: "Email",
         items: [
           { value: EMAIL_TOKEN, href: gmailComposeHref(SITE_EMAIL) },
           { value: PERSONAL_EMAIL, href: gmailComposeHref(PERSONAL_EMAIL) },
@@ -159,107 +186,122 @@ export const messages: Record<Lang, Messages> = {
         { label: "微信", value: "lmj7926" },
         { label: "简历 PDF", value: "下载简历", href: "/简历-吕明锦.pdf" },
       ],
-      availability: "欢迎校招、实习与技术合作通过邮件联系。",
+      availability: "欢迎通过邮件联系校招、实习、论文交流与技术合作。",
       researchFocus: {
-        label: "研究方向",
-        items: ["多智能体编排", "多目标跟踪"],
+        label: "Research Interests",
+        items: ["Dense multi-object tracking", "Motion reasoning with MoE/SSM", "Agentic decision systems"],
       },
-      likeBar: {
-        likeButton: "点赞",
-        unlikeButton: "取消点赞",
-        totalSuffix: "累计获赞",
-        unavailableHint: "计数暂不可用，请稍后再试",
-      },
+      profileLinks: [
+        { label: "Email", value: SITE_EMAIL, href: gmailComposeHref(SITE_EMAIL) },
+        { label: "CV", value: "PDF", href: "/简历-吕明锦.pdf" },
+        { label: "GitHub", value: "lvmingjin77-ui", href: githubHref },
+        { label: "arXiv", value: "GateMOT", href: paperHref },
+      ],
+      highlights: [
+        "第一作者预印本 GateMOT: Q-Gated Attention for Dense Object Tracking",
+        "华中科技大学计算机技术硕士在读，本科综合排名 3 / 36",
+        "VIVO 蓝图实验室影像算法研究部实习，参与图像生成与画质增强相关工作",
+      ],
+      quickFacts: [
+        { label: "Affiliation", value: "HUST" },
+        { label: "Location", value: "Wuhan, China" },
+        { label: "Focus", value: "Vision + Agents" },
+      ],
+    },
+    news: {
+      headline: "最新动态",
+      items: [
+        { date: "2026.04", text: "GateMOT: Q-Gated Attention for Dense Object Tracking 发布 arXiv 预印本。", href: paperHref },
+        { date: "2025.09", text: "进入华中科技大学攻读计算机技术硕士，继续研究多目标跟踪与多智能体系统。" },
+        { date: "2025.02", text: "加入 VIVO 蓝图实验室影像算法研究部，参与图像生成、画质增强与稳定性相关工作。" },
+      ],
+    },
+    research: {
+      label: "Selected Publications",
+      headline: "论文发表",
+      intro: "优先展示论文、预印本与可复现实验链接。摘要保持短句，便于快速判断研究贡献。",
+      papers: [
+        {
+          title: "GateMOT: Q-Gated Attention for Dense Object Tracking",
+          authors: "Mingjin Lü",
+          venue: "arXiv:2604.26353 · cs.CV",
+          year: "2026",
+          authorRole: "First author",
+          href: paperHref,
+          links: [{ label: "Paper", href: paperHref }],
+          imageSrc: "/GateMOT.png",
+          imageAlt: "GateMOT 论文方法示意图",
+          summary:
+            "提出 Q-Gated Linear Attention，以可学习 Query 门控和元素级操作降低高分辨率特征上的注意力冗余；统一解码器并行处理检测、运动预测与 ReID，以缓解多任务特征冲突。",
+        },
+      ],
     },
     work: {
-      label: "",
+      label: "Selected Projects",
       headline: "项目经历",
+      intro: "项目区聚焦与研究方向相关的系统实现、实验管线和工程落地，尽量以贡献和链接为核心。",
       items: [
         {
           title: "Multi-Agent 金融决策与 A 股投研系统",
-          context: "智能体 · 量化 / 投研",
+          context: "Multi-Agent · Quant Research",
           summary:
-            "跨市场量化：构建异质化智能体对多维数据做策略模拟与分级权重，为上层智能体提供多维度决策依据，缓解单一智能体回测风险；设计底层多智能体动态博弈以稳定收益表现。A 股场景下采用双 Agent：数据 Agent 采集行情与资讯并生成报告，决策 Agent 完成筛选、风控与模拟交易，对接妙想金融 API、AkShare 等构建数据 Pipeline。",
-          bullets: ["跨市场多智能体决策", "双 Agent 投研流水线"],
-          tags: ["Multi-Agent", "Python", "FinTech", "API"],
+            "构建异质化智能体进行多维数据分析、策略模拟与分级权重汇总，并在 A 股场景中使用数据 Agent 与决策 Agent 形成投研流水线。",
+          bullets: ["接入行情、资讯与行业板块数据，自动生成投研报告。", "将筛选、风控与模拟交易拆分为可追踪的 Agent 工作流。"],
+          tags: ["Python", "Multi-Agent", "AkShare", "FinTech"],
           repoHref: "https://github.com/lvmingjin77-ui/EggyTrading",
-          repoLinkText: "GitHub 仓库 →",
+          repoLinkText: "GitHub",
         },
         {
           title: "面向多元运动模式的轨迹推理方法研究",
-          context: "多目标跟踪 · 混合专家 MoE · SSM",
+          context: "MOT · MoE · SSM",
           summary:
-            "针对复杂运动模式下轨迹预测失效问题，提出融合 MoE 与 SSM 的轨迹推理框架：利用 SSM 建模长序列依赖，通过 MoE 门控自适应区分线性/非线性运动专家，提升对突发机动的鲁棒性。",
-          bullets: ["MoE + SSM 联合建模", "多运动模式自适应专家选择"],
+            "针对复杂运动模式下轨迹预测失效问题，探索融合 MoE 门控与 SSM 长序列建模的轨迹推理框架。",
+          bullets: ["用 SSM 建模长时序依赖。", "通过 MoE 门控区分线性与非线性运动专家，增强突发机动鲁棒性。"],
           tags: ["PyTorch", "MOT", "MoE", "SSM"],
           repoHref: "https://github.com/lvmingjin77-ui/SSM-MOE-Track",
-          repoLinkText: "GitHub 仓库 →",
+          repoLinkText: "GitHub",
         },
         {
-          title: "基于 OpenClaw 的 Multi-Agent A 股投研决策系统设计",
-          context: "智能体 · A 股投研",
+          title: "基于 OpenClaw 的 Multi-Agent A 股投研决策系统",
+          context: "Agents · A-share Research",
           summary:
-            "采用双 Agent 协作架构：数据 Agent 负责每日盘前、盘后实时采集市场行情、资金流向、行业板块、财经资讯等数据，并自动生成市场分析报告；决策 Agent 基于数据完成投资标的筛选、风控检查与模拟交易执行。",
-          bullets: [
-            "通过妙想金融 API、AkShare 等工具构建数据 Pipeline，自动完成市场监控与报告生成。",
-            "显著提升了投资决策效率。",
-          ],
-          tags: ["OpenClaw", "Multi-Agent", "AkShare", "Python", "FinTech"],
+            "设计双 Agent 协作架构，覆盖盘前盘后数据采集、市场分析报告、标的筛选、风控检查与模拟交易执行。",
+          bullets: ["使用妙想金融 API、AkShare 等工具构建数据 Pipeline。", "把数据处理、报告生成与决策逻辑拆成可维护模块。"],
+          tags: ["OpenClaw", "Multi-Agent", "Python"],
         },
         {
-          title: "基于AIoT的工业监测预警及辅助决策系统",
-          context: "物联网 · AIoT",
+          title: "基于 AIoT 的工业监测预警及辅助决策系统",
+          context: "AIoT · Industrial Vision",
           summary:
-            "负责工业视觉监测链路中的算法集成与部署验证，完成目标检测、目标跟踪与行为识别模块的组合式落地。",
-          bullets: [
-            "基于 YOLO、DeepSORT、SlowFast 搭建从视频流采集、推理、异常识别到预警输出的完整处理流程，验证多模型边缘端部署可行性。",
-            "参与系统吞吐、时延与稳定性验证，具备多模型串联推理与场景化落地经验。",
-          ],
-          tags: ["AIoT", "YOLO", "DeepSORT", "SlowFast", "边缘部署"],
+            "参与工业视觉监测链路中的算法集成与部署验证，完成检测、跟踪、行为识别与异常预警模块组合。",
+          bullets: ["基于 YOLO、DeepSORT、SlowFast 搭建视频流推理流程。", "参与吞吐、时延与稳定性验证，评估多模型边缘端部署可行性。"],
+          tags: ["YOLO", "DeepSORT", "SlowFast", "Edge AI"],
           repoHref: "https://github.com/lvmingjin77-ui/FactorySystem",
-          repoLinkText: "GitHub 仓库 →",
+          repoLinkText: "GitHub",
         },
         {
           title: "基于文心大模型的智能四足机器狗森林巡检系统",
-          context: "具身智能 · 智能机器人",
+          context: "Embodied AI · Robotics",
           summary:
-            "探索大模型在具身智能中的应用：在四足机器人平台上搭建森林巡检系统，打通从视觉感知到语义决策的链路，利用文心大模型完成环境理解与巡航逻辑判断，实现自主决策与任务分发。",
-          bullets: ["视觉—语义决策链路设计", "大模型驱动的巡航与任务编排"],
-          tags: ["文心大模型", "具身智能", "机器人", "Python"],
+            "在四足机器人平台上打通视觉感知、语义理解、巡航判断与任务分发链路，探索大模型在具身智能中的应用。",
+          bullets: ["构建视觉到语义决策的任务链路。", "用大模型辅助环境理解、巡航逻辑判断与任务编排。"],
+          tags: ["Embodied AI", "Robotics", "Python"],
           repoHref: "https://github.com/lvmingjin77-ui/UnitreeGo1",
-          repoLinkText: "GitHub 仓库 →",
+          repoLinkText: "GitHub",
         },
       ],
       toyShelf: {
-        badge: "Toy projects",
+        badge: "Additional repositories",
         title: "轻量实验与小仓库",
-        description:
-          "把大模型接进量化研究工作流，以及 On-Call 场景的检索与 Agent 演示。体量不大、接口直白，便于按需拆解或当模块参考。",
+        description: "围绕 LLM 工作流、量化研究和 On-Call Agent 的小型实验，可作为模块参考。",
         links: [
           { label: "LLM 增强的研究工作流", href: "https://github.com/lvmingjin77-ui/tenxai" },
           { label: "On-Call Agent 助手", href: "https://github.com/lvmingjin77-ui/OnCallAgent" },
         ],
       },
     },
-    research: {
-      label: "",
-      headline: "论文发表",
-      papers: [
-        {
-          title: "GateMOT: Q-Gated Attention for Dense Object Tracking",
-          venue: "arXiv:2604.26353 · cs.CV（预印本）",
-          authorRole: "第一作者",
-          href: "https://arxiv.org/abs/2604.26353",
-          linkText: "在 arXiv 打开论文 →",
-          imageSrc: "/GateMOT.png",
-          imageAlt: "GateMOT 论文配图",
-          summary:
-            "针对多目标跟踪中高分辨率特征导致 Attention 计算冗余的问题，提出 GateMOT：设计 Q-Gated Linear Attention，将 Query 重构为可学习门控，以元素级操作替代部分矩阵乘法，将复杂度由 O(N²) 降至 O(N)；并构建紧耦合统一解码器并行处理检测、运动预测与 ReID，缓解多任务特征冲突。",
-        },
-      ],
-    },
     experience: {
-      label: "",
+      label: "Education & Experience",
       headline: "教育背景与实习经历",
       education: {
         section: "教育背景",
@@ -267,7 +309,7 @@ export const messages: Record<Lang, Messages> = {
           {
             period: "2025.09 — 至今",
             title: "华中科技大学 · 计算机技术 · 硕士（在读）",
-            detail: "在读。延续计算机视觉的多目标跟踪领域算法与多智能系统编排方向",
+            detail: "延续计算机视觉中的多目标跟踪算法与多智能体系统编排方向。",
           },
           {
             period: "2021.10 — 2025.06",
@@ -276,13 +318,10 @@ export const messages: Record<Lang, Messages> = {
             detailBlocks: [
               { label: "成绩", text: "学分绩点 4.234 / 5.0，综合排名 3 / 36" },
               { label: "英语", text: "CET-4 616，CET-6 567" },
+              { label: "荣誉", text: "多次校三好学生、校优秀共青团员、校一等奖学金与三等奖学金" },
               {
-                label: "校级荣誉与奖学金",
-                text: "多次校三好学生、校优秀共青团员、校一等奖学金与三等奖学金",
-              },
-              {
-                label: "国家级竞赛",
-                text: "英语竞赛一等奖；数学竞赛三等奖；「中国软件杯」大学生软件设计大赛国家级一等奖；全国大学生服务外包创新创业大赛国家级三等奖",
+                label: "竞赛",
+                text: "英语竞赛一等奖；数学竞赛三等奖；中国软件杯国家级一等奖；全国大学生服务外包创新创业大赛国家级三等奖",
               },
             ],
           },
@@ -293,9 +332,9 @@ export const messages: Record<Lang, Messages> = {
         entries: [
           {
             period: "2025.02 — 2025.06",
-            title: "VIVO 蓝图实验室 · 影像算法研究部（质量增强算法中心）· 助理算法工程师",
+            title: "VIVO 蓝图实验室 · 影像算法研究部 · 助理算法工程师",
             detail:
-              "参与图像生成（i2i）对齐与画质稳定性相关工作；探索将 SFT 与 GRPO 迁移至图像生成管线，负责复杂场景画质增强与 Stable Diffusion / VAR 调研，构建 FAR 去噪与模糊判定等方案。",
+              "参与图像生成（i2i）对齐与画质稳定性相关工作；探索将 SFT 与 GRPO 迁移至图像生成管线，调研 Stable Diffusion / VAR，并构建 FAR 去噪与模糊判定方案。",
           },
           {
             period: "2024.11 — 2025.01",
@@ -305,47 +344,41 @@ export const messages: Record<Lang, Messages> = {
         ],
       },
       belief:
-        "同时具备算法研究与系统落地视角：重视可验证的实验与可交付的工程边界，关注 Agent 在金融决策与复杂任务自动化中的稳定部署。",
-      stack: "常用栈：Python · C++ · PyTorch · Linux · Git · 多智能体编排 · 视觉/生成模型管线",
+        "我更愿意把主页做成可检索、可验证的学术索引：论文、代码、实验方向、工程经历都应该能被快速定位。",
+      stack: "常用栈：Python · C++ · PyTorch · Linux · Git · Multi-Agent · Computer Vision",
     },
     contact: {
       label: "联络",
-      line: "",
+      line: "欢迎通过邮件联系论文交流、实习机会、校招沟通或技术合作。",
       emailWebComposeHint: "在 Gmail 网页中新标签页打开撰写（需登录 Google）",
       footerChannels: [
-        {
-          label: "学校邮箱",
-          value: SITE_EMAIL,
-          href: gmailComposeHref(SITE_EMAIL),
-        },
-        {
-          label: "个人邮箱",
-          value: PERSONAL_EMAIL,
-          href: gmailComposeHref(PERSONAL_EMAIL),
-        },
-        {
-          label: "手机",
-          value: "+86 134-7614-0773",
-          href: "tel:+8613476140773",
-        },
+        { label: "学校邮箱", value: SITE_EMAIL, href: gmailComposeHref(SITE_EMAIL) },
+        { label: "个人邮箱", value: PERSONAL_EMAIL, href: gmailComposeHref(PERSONAL_EMAIL) },
+        { label: "手机", value: "+86 134-7614-0773", href: "tel:+8613476140773" },
       ],
     },
   },
   en: {
-    meta: { title: "Mingjin Lü — Algorithms & intelligent systems" },
-    nav: { work: "Projects", research: "Papers", experience: "Experience", contact: "Contact" },
+    meta: {
+      title: "Mingjin Lü | Computer Vision & Multi-Agent Systems",
+      description:
+        "Mingjin Lü is an M.Sc. student in Computer Technology at HUST, working on multi-object tracking, visual models, and multi-agent systems.",
+    },
+    nav: { about: "About", research: "Publications", work: "Projects", experience: "Experience", contact: "Contact", cv: "CV" },
     hero: {
       photoAlt: "Portrait of Mingjin Lü",
-      status: "Wuhan · M.Sc. Computer Technology, HUST (in progress)",
+      status: "M.Sc. Computer Technology, Huazhong University of Science and Technology",
       name: "Mingjin Lü",
-      lede: "",
-      blurb: "",
+      role: "M.Sc. Student in Computer Technology",
+      lede: "I study multi-object tracking, trajectory reasoning, and multi-agent orchestration for complex decision workflows.",
+      blurb:
+        "My work connects reproducible experiments with deployable systems: dense visual tracking and motion modeling on one side, and stable agent workflows for finance, automation, and engineering tasks on the other.",
       skillGroups: [
-        { label: "Engineering", items: ["Python", "C++", "Linux", "Git"] },
-        { label: "Deep learning", items: ["PyTorch", "Computer vision", "SFT / GRPO"] },
-        { label: "Agents", items: ["Multi-agent systems", "AI / coding agents"] },
+        { label: "Research", items: ["Multi-Object Tracking", "Trajectory Reasoning", "Multi-Agent Systems"] },
+        { label: "Methods", items: ["Attention", "MoE", "SSM", "SFT / GRPO"] },
+        { label: "Engineering", items: ["Python", "C++", "PyTorch", "Linux"] },
       ],
-      contactIntro: "Contact",
+      contactIntro: "Quick links",
       emailsBlock: {
         label: "Email",
         items: [
@@ -356,132 +389,144 @@ export const messages: Record<Lang, Messages> = {
       contactItems: [
         { label: "Phone", value: "+86 134-7614-0773", href: "tel:+8613476140773" },
         { label: "WeChat", value: "lmj7926" },
-        { label: "Résumé (PDF)", value: "Download PDF", href: "/简历-吕明锦.pdf" },
+        { label: "Resume PDF", value: "Download PDF", href: "/简历-吕明锦.pdf" },
       ],
-      availability: "Reach out via email for campus hiring, internships, or collaborations.",
+      availability: "Please reach out by email for internships, campus hiring, research discussions, or collaboration.",
       researchFocus: {
-        label: "Research focus",
-        items: ["Multi-agent orchestration", "Multi-object tracking"],
+        label: "Research Interests",
+        items: ["Dense multi-object tracking", "Motion reasoning with MoE/SSM", "Agentic decision systems"],
       },
-      likeBar: {
-        likeButton: "Like",
-        unlikeButton: "Unlike",
-        totalSuffix: "likes total",
-        unavailableHint: "Count unavailable — try again later",
-      },
+      profileLinks: [
+        { label: "Email", value: SITE_EMAIL, href: gmailComposeHref(SITE_EMAIL) },
+        { label: "CV", value: "PDF", href: "/简历-吕明锦.pdf" },
+        { label: "GitHub", value: "lvmingjin77-ui", href: githubHref },
+        { label: "arXiv", value: "GateMOT", href: paperHref },
+      ],
+      highlights: [
+        "First-author preprint: GateMOT: Q-Gated Attention for Dense Object Tracking.",
+        "M.Sc. student at HUST; undergraduate GPA rank 3 / 36.",
+        "Former imaging algorithm intern at VIVO Blueprint Lab, working on generation and image quality enhancement.",
+      ],
+      quickFacts: [
+        { label: "Affiliation", value: "HUST" },
+        { label: "Location", value: "Wuhan, China" },
+        { label: "Focus", value: "Vision + Agents" },
+      ],
+    },
+    news: {
+      headline: "News",
+      items: [
+        { date: "Apr 2026", text: "GateMOT: Q-Gated Attention for Dense Object Tracking released as an arXiv preprint.", href: paperHref },
+        { date: "Sep 2025", text: "Started M.Sc. study in Computer Technology at Huazhong University of Science and Technology." },
+        { date: "Feb 2025", text: "Joined VIVO Blueprint Lab as an imaging algorithm intern." },
+      ],
+    },
+    research: {
+      label: "Selected Publications",
+      headline: "Publications",
+      intro: "Selected papers and preprints, with direct links to papers and reproducible artifacts when available.",
+      papers: [
+        {
+          title: "GateMOT: Q-Gated Attention for Dense Object Tracking",
+          authors: "Mingjin Lü",
+          venue: "arXiv:2604.26353 · cs.CV",
+          year: "2026",
+          authorRole: "First author",
+          href: paperHref,
+          links: [{ label: "Paper", href: paperHref }],
+          imageSrc: "/GateMOT.png",
+          imageAlt: "GateMOT method figure",
+          summary:
+            "Introduces Q-Gated Linear Attention to reduce redundant attention over high-resolution feature maps, and a unified decoder for detection, motion forecasting, and ReID.",
+        },
+      ],
     },
     work: {
-      label: "",
+      label: "Selected Projects",
       headline: "Projects",
+      intro: "Research-adjacent systems, experiment pipelines, and engineering implementations, condensed for quick scanning.",
       items: [
         {
-          title: "Multi-agent quant & A-share research assistant",
-          context: "Agents · quant / research automation",
+          title: "Multi-agent quant and A-share research assistant",
+          context: "Multi-Agent · Quant Research",
           summary:
-            "Cross-market setup with heterogeneous agents for strategy simulation and tiered weighting; dual-agent A-share stack with a data agent for ingestion/reporting and a decision agent for screening, risk checks, and simulated trading (Miaoxiang API, AkShare, etc.).",
-          bullets: ["Heterogeneous multi-agent decisions", "Dual-agent research pipeline"],
-          tags: ["Multi-agent", "Python", "FinTech"],
+            "Built heterogeneous agents for market data analysis, strategy simulation, tiered weighting, and A-share research workflows.",
+          bullets: ["Integrated market, news, and sector data to produce research briefs.", "Separated screening, risk checks, and simulated trading into traceable agent workflows."],
+          tags: ["Python", "Multi-Agent", "AkShare", "FinTech"],
           repoHref: "https://github.com/lvmingjin77-ui/EggyTrading",
-          repoLinkText: "GitHub →",
+          repoLinkText: "GitHub",
         },
         {
           title: "Trajectory reasoning with MoE + SSM",
-          context: "MOT · mixture-of-experts · state-space models",
+          context: "MOT · MoE · SSM",
           summary:
-            "Addresses prediction failures under diverse motion by combining MoE gating with SSM sequence modeling—experts specialize in linear vs. highly non-linear motion, improving robustness to sudden maneuvers.",
-          bullets: ["MoE + SSM hybrid framework", "Adaptive expert routing"],
+            "Explored a trajectory reasoning framework that combines MoE routing with SSM sequence modeling for diverse motion patterns.",
+          bullets: ["Used SSMs to model long-range temporal dependencies.", "Routed linear and nonlinear motion patterns through adaptive experts."],
           tags: ["PyTorch", "MOT", "MoE", "SSM"],
           repoHref: "https://github.com/lvmingjin77-ui/SSM-MOE-Track",
-          repoLinkText: "GitHub →",
+          repoLinkText: "GitHub",
         },
         {
-          title: "OpenClaw-based Multi-Agent A-share research & trading decision system",
-          context: "Agents · A-share research",
+          title: "OpenClaw-based A-share research decision system",
+          context: "Agents · A-share Research",
           summary:
-            "Dual-agent architecture: a data agent collects pre- and post-market quotes, capital flows, sectors, and financial news, then auto-generates research briefs; a decision agent screens targets, performs risk checks, and runs simulated trades from that input.",
-          bullets: [
-            "Pipelines built with Miaoxiang Finance APIs and AkShare for monitoring, ingestion, and report generation.",
-            "Improved research workflow speed and decision quality.",
-          ],
-          tags: ["OpenClaw", "Multi-Agent", "AkShare", "Python", "FinTech"],
+            "Designed a dual-agent architecture for data ingestion, research reports, target screening, risk checks, and simulated trades.",
+          bullets: ["Built data pipelines with Miaoxiang Finance APIs and AkShare.", "Modularized data processing, reporting, and decision logic."],
+          tags: ["OpenClaw", "Multi-Agent", "Python"],
         },
         {
-          title: "AIoT-based industrial monitoring, alerting & decision support",
-          context: "IoT · AIoT",
+          title: "AIoT industrial monitoring and alerting system",
+          context: "AIoT · Industrial Vision",
           summary:
-            "Integrated and validated algorithms in the industrial vision monitoring chain, shipping detection, tracking, and action recognition as composable modules.",
-          bullets: [
-            "Built an end-to-end pipeline from video ingest through inference, anomaly detection, and alerting with YOLO, DeepSORT, and SlowFast; validated multi-model edge deployment.",
-            "Contributed to throughput, latency, and stability testing; hands-on with cascaded multi-model inference and scenario-driven rollout.",
-          ],
-          tags: ["AIoT", "YOLO", "DeepSORT", "SlowFast", "Edge"],
+            "Integrated detection, tracking, action recognition, and alerting modules in an industrial vision monitoring pipeline.",
+          bullets: ["Built video inference flow with YOLO, DeepSORT, and SlowFast.", "Contributed to throughput, latency, and stability validation for edge deployment."],
+          tags: ["YOLO", "DeepSORT", "SlowFast", "Edge AI"],
           repoHref: "https://github.com/lvmingjin77-ui/FactorySystem",
-          repoLinkText: "GitHub →",
+          repoLinkText: "GitHub",
         },
         {
-          title: "Forest patrol with quadruped robots + Wenxin LLM",
-          context: "Embodied AI · robotics",
+          title: "Forest patrol system with quadruped robots and Wenxin LLM",
+          context: "Embodied AI · Robotics",
           summary:
-            "Explores LLMs for embodied AI on a quadruped platform: perception-to-decision pipeline, semantic scene understanding with Wenxin, autonomous patrol logic and task dispatch.",
-          bullets: ["Vision-to-language decision chain", "LLM-driven patrol orchestration"],
-          tags: ["Wenxin", "Embodied AI", "Python"],
+            "Connected visual perception, semantic reasoning, patrol decisions, and task dispatch on a quadruped robot platform.",
+          bullets: ["Built a vision-to-language decision workflow.", "Used an LLM for scene understanding, patrol logic, and task orchestration."],
+          tags: ["Embodied AI", "Robotics", "Python"],
           repoHref: "https://github.com/lvmingjin77-ui/UnitreeGo1",
-          repoLinkText: "GitHub →",
+          repoLinkText: "GitHub",
         },
       ],
       toyShelf: {
-        badge: "Toy projects",
-        title: "Toy experiments & small repos",
-        description:
-          "LLM in a quant research workflow, plus search and an agent for on-call style SOPs. Small surface area and readable wiring—easy to fork or borrow patterns from.",
+        badge: "Additional repositories",
+        title: "Small experiments",
+        description: "Compact experiments around LLM workflows, quant research, and on-call agents.",
         links: [
-          { label: "LLM-augmented quant research workflow", href: "https://github.com/lvmingjin77-ui/tenxai" },
+          { label: "LLM-augmented research workflow", href: "https://github.com/lvmingjin77-ui/tenxai" },
           { label: "On-call assistant agent", href: "https://github.com/lvmingjin77-ui/OnCallAgent" },
         ],
       },
     },
-    research: {
-      label: "",
-      headline: "Publications",
-      papers: [
-        {
-          title: "GateMOT: Q-Gated Attention for Dense Object Tracking",
-          venue: "arXiv:2604.26353 · cs.CV (preprint)",
-          authorRole: "First author",
-          href: "https://arxiv.org/abs/2604.26353",
-          linkText: "Open on arXiv →",
-          imageSrc: "/GateMOT.png",
-          imageAlt: "GateMOT paper figure",
-          summary:
-            "Targets redundant attention on high-resolution feature maps in dense MOT: introduces GateMOT with Q-Gated Linear Attention—queries as learnable gates and element-wise ops to replace part of the quadratic matmuls, reducing complexity toward O(N); a tightly coupled decoder jointly handles detection, motion forecasting, and ReID to mitigate task conflicts.",
-        },
-      ],
-    },
     experience: {
-      label: "",
-      headline: "Education & internships",
+      label: "Education & Experience",
+      headline: "Education & Experience",
       education: {
         section: "Education",
         entries: [
           {
-            period: "Sep 2025 — present",
+            period: "Sep 2025 — Present",
             title: "Huazhong University of Science and Technology · M.Sc. Computer Technology",
-            detail: "In progress; continuing work on dense multi-object tracking in computer vision and multi-agent system orchestration.",
+            detail: "Continuing research in multi-object tracking and multi-agent system orchestration.",
           },
           {
             period: "Oct 2021 — Jun 2025",
-            title: "Wuhan University of Technology · B.Eng. Software Engineering (pilot)",
+            title: "Wuhan University of Technology · B.Eng. Software Engineering",
             detail: "",
             detailBlocks: [
               { label: "Academic", text: "GPA 4.234 / 5.0, class rank 3 / 36" },
               { label: "English", text: "CET-4 616, CET-6 567" },
+              { label: "Honors", text: "Merit student, outstanding league member, first- and third-class scholarships." },
               {
-                label: "University honors",
-                text: "Merit student (multiple times), outstanding league member, first- and third-class merit scholarships.",
-              },
-              {
-                label: "National competitions",
-                text: "National English contest (1st prize), national math contest (3rd prize), China Software Cup (1st prize, national), National University Service Outsourcing & Innovation Contest (3rd prize, national).",
+                label: "Competitions",
+                text: "National English contest 1st prize; math contest 3rd prize; China Software Cup national 1st prize; Service Outsourcing Innovation Contest national 3rd prize.",
               },
             ],
           },
@@ -492,41 +537,29 @@ export const messages: Record<Lang, Messages> = {
         entries: [
           {
             period: "Feb 2025 — Jun 2025",
-            title: "VIVO Blueprint Lab · imaging algorithms (quality enhancement) · intern engineer",
+            title: "VIVO Blueprint Lab · Imaging Algorithms · Assistant Algorithm Engineer",
             detail:
-              "Image generation (i2i) alignment and quality; SFT/GRPO-style methods in the gen stack; FAR denoising and blur detection under challenging capture conditions.",
+              "Worked on image generation alignment and quality stability; explored SFT/GRPO transfer into generation pipelines; researched Stable Diffusion / VAR and built FAR denoising and blur detection schemes.",
           },
           {
             period: "Nov 2024 — Jan 2025",
-            title: "Bolink (Wuhan) Technology Co., Ltd. · R&D center · software intern",
-            detail: "EIT lung imaging product: front-end interaction architecture and documentation to support compliance and launch.",
+            title: "Bolink (Wuhan) Technology · R&D Center · Software Intern",
+            detail: "Supported EIT lung imaging product development, front-end interaction architecture, and technical documentation for compliance and launch work.",
           },
         ],
       },
       belief:
-        "Care equally about reproducible experiments and shippable engineering—especially stable deployment of agents for finance and automation.",
-      stack: "Stack: Python · C++ · PyTorch · Linux · Git · multi-agent orchestration · vision / generative pipelines",
+        "I prefer the site to behave like a searchable academic index: papers, code, research interests, and engineering work should be easy to verify.",
+      stack: "Stack: Python · C++ · PyTorch · Linux · Git · Multi-Agent · Computer Vision",
     },
     contact: {
       label: "Contact",
-      line: "",
+      line: "Please reach out by email for research discussions, internships, campus hiring, or technical collaboration.",
       emailWebComposeHint: "Opens Gmail compose in a new tab (Google sign-in required)",
       footerChannels: [
-        {
-          label: "School email (HUST)",
-          value: SITE_EMAIL,
-          href: gmailComposeHref(SITE_EMAIL),
-        },
-        {
-          label: "Personal email",
-          value: PERSONAL_EMAIL,
-          href: gmailComposeHref(PERSONAL_EMAIL),
-        },
-        {
-          label: "Phone",
-          value: "+86 134-7614-0773",
-          href: "tel:+8613476140773",
-        },
+        { label: "HUST email", value: SITE_EMAIL, href: gmailComposeHref(SITE_EMAIL) },
+        { label: "Personal email", value: PERSONAL_EMAIL, href: gmailComposeHref(PERSONAL_EMAIL) },
+        { label: "Phone", value: "+86 134-7614-0773", href: "tel:+8613476140773" },
       ],
     },
   },

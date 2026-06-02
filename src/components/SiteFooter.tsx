@@ -7,36 +7,40 @@ type SiteFooterProps = {
 };
 
 export function SiteFooter({ t }: SiteFooterProps) {
-  const contactLead = t.contact.line.trim();
   return (
-    <footer id="contact" className="scroll-mt-20 bg-canvas pb-12 pt-14 dark:bg-canvas-ink sm:pb-14 sm:pt-16">
+    <footer id="contact" className="scroll-mt-20 bg-canvas py-12 sm:py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <Reveal>
-          <SectionHeading>{t.contact.label}</SectionHeading>
-          {contactLead ? (
-            <p className="mt-6 w-full max-w-none text-xl leading-relaxed text-canvas-ink/88 dark:text-[#c9c6c0] sm:text-[1.35rem]">{t.contact.line}</p>
-          ) : null}
-          <dl className={`grid gap-6 sm:grid-cols-3 sm:gap-8 ${contactLead ? "mt-8" : "mt-6"}`}>
-            {t.contact.footerChannels.map((ch) => {
-              const openExternal = ch.href.startsWith("https://");
-              return (
-              <div key={ch.href + ch.label} className="min-w-0">
-                <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-canvas-ink/52 dark:text-[#9a968f]">{ch.label}</dt>
-                <dd className="mt-2">
-                  <a
-                    href={ch.href}
-                    title={openExternal ? t.contact.emailWebComposeHint : undefined}
-                    target={openExternal ? "_blank" : undefined}
-                    rel={openExternal ? "noopener noreferrer" : undefined}
-                    className="break-all font-mono text-[0.95rem] font-medium leading-snug text-canvas-ink underline decoration-canvas-ink/25 underline-offset-[3px] transition hover:text-accent hover:decoration-accent/40 dark:text-[#e8e6e3] dark:decoration-white/20 dark:hover:text-accent-light dark:hover:decoration-accent-light/45 sm:text-base"
-                  >
-                    {ch.value}
-                  </a>
-                </dd>
-              </div>
-              );
-            })}
-          </dl>
+        <Reveal y={16}>
+          <div className="grid gap-6 lg:grid-cols-[13rem_1fr] lg:gap-10">
+            <SectionHeading label="Contact">{t.contact.label}</SectionHeading>
+            <div className="border-t border-line pt-5">
+              <p className="max-w-3xl text-sm leading-relaxed text-ink/78">{t.contact.line}</p>
+              <dl className="mt-6 grid gap-4 sm:grid-cols-3">
+                {t.contact.footerChannels.map((ch) => {
+                  const openExternal = ch.href.startsWith("https://");
+                  return (
+                    <div key={ch.href + ch.label} className="min-w-0">
+                      <dt className="font-mono text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-muted">{ch.label}</dt>
+                      <dd className="mt-2">
+                        <a
+                          href={ch.href}
+                          title={openExternal ? t.contact.emailWebComposeHint : undefined}
+                          target={openExternal ? "_blank" : undefined}
+                          rel={openExternal ? "noopener noreferrer" : undefined}
+                          className="break-all font-mono text-sm font-medium text-ink underline decoration-line underline-offset-4 transition hover:text-accent hover:decoration-accent/40"
+                        >
+                          {ch.value}
+                        </a>
+                      </dd>
+                    </div>
+                  );
+                })}
+              </dl>
+              <p className="mt-8 border-t border-line pt-4 font-mono text-[0.72rem] text-muted">
+                © 2026 Mingjin Lü. Built with React, TypeScript, and GitHub Pages.
+              </p>
+            </div>
+          </div>
         </Reveal>
       </div>
     </footer>

@@ -3,47 +3,49 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-canvas: 248 250 252;
+    --color-surface: 255 255 255;
+    --color-ink: 17 24 39;
+    --color-muted: 100 116 139;
+    --color-line: 226 232 240;
+    --color-accent: 29 78 216;
+  }
+
+  .dark {
+    --color-canvas: 15 23 42;
+    --color-surface: 17 24 39;
+    --color-ink: 241 245 249;
+    --color-muted: 148 163 184;
+    --color-line: 51 65 85;
+    --color-accent: 147 197 253;
+  }
+
   html {
     scroll-behavior: smooth;
   }
+
   body {
-    @apply font-sans text-base antialiased bg-canvas text-canvas-ink dark:bg-canvas-ink dark:text-[#e8e6e3];
+    @apply bg-canvas font-sans text-base text-ink antialiased;
   }
-  .font-display {
-    font-optical-sizing: auto;
-  }
+
   ::selection {
-    @apply bg-accent/20 text-canvas-ink;
+    @apply bg-accent/15 text-ink;
   }
-  .dark ::selection {
-    @apply bg-accent-light/20 text-white;
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
 @layer components {
-  /* 统一卡片：渐变底、顶边高光、悬停抬起与阴影 */
   .surface-card {
-    @apply relative isolate overflow-hidden rounded-2xl border border-canvas-ink/[0.09] bg-gradient-to-b from-white/75 via-surface/90 to-surface shadow-card transition-[transform,box-shadow,border-color] duration-300 ease-out dark:border-white/[0.08] dark:from-white/[0.06] dark:via-surface-dark/95 dark:to-surface-dark dark:shadow-card-dark;
+    @apply rounded-lg border border-line bg-surface shadow-subtle;
   }
-  .surface-card::before {
-    content: "";
-    @apply pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/25 to-transparent opacity-60 dark:via-accent-light/30;
-  }
-  .surface-card::after {
-    content: "";
-    @apply pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-accent/[0.07] opacity-40 blur-3xl transition-opacity duration-500 ease-out dark:bg-accent-light/[0.06];
-  }
-  .surface-card-hover {
-    @apply hover:-translate-y-1 hover:border-accent/20 hover:shadow-card-hover dark:hover:border-accent-light/20 dark:hover:shadow-card-hover-dark;
-  }
-  .surface-card-hover:hover::after {
-    @apply opacity-100;
-  }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .surface-card-hover:hover {
-    transform: none;
+  .surface-card-hover {
+    @apply transition-colors hover:border-accent/35;
   }
 }
 
@@ -51,8 +53,16 @@
   .text-balance {
     text-wrap: balance;
   }
-  .grain {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
@@ -60,6 +70,7 @@
   .print\:hidden {
     display: none !important;
   }
+
   body {
     background: white !important;
     color: black !important;

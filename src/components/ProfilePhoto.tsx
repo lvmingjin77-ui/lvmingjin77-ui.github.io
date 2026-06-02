@@ -23,7 +23,7 @@ export function ProfilePhoto({ name, alt }: ProfilePhotoProps) {
   if (failed) {
     return (
       <div
-        className="flex aspect-[4/5] w-[10.5rem] shrink-0 items-center justify-center rounded-2xl border-2 border-canvas-ink/12 bg-surface font-display text-3xl font-semibold text-canvas-ink/50 dark:border-white/12 dark:bg-surface-dark dark:text-[#8f8b85] sm:w-[11.5rem]"
+        className="flex aspect-[4/5] w-44 shrink-0 items-center justify-center rounded-lg border border-line bg-surface font-display text-3xl font-semibold text-muted sm:w-48"
         aria-hidden
       >
         {initialsFrom(name)}
@@ -37,7 +37,7 @@ export function ProfilePhoto({ name, alt }: ProfilePhotoProps) {
       alt={alt}
       width={184}
       height={230}
-      className="aspect-[4/5] w-[10.5rem] shrink-0 rounded-2xl border-2 border-canvas-ink/12 object-cover shadow-md dark:border-white/12 sm:w-[11.5rem]"
+      className="aspect-[4/5] w-44 shrink-0 rounded-lg border border-line object-cover shadow-sm sm:w-48"
       onError={() => setFailed(true)}
     />
   );

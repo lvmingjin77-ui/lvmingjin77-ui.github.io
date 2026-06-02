@@ -8,12 +8,14 @@ type NewsSectionProps = {
 
 export function NewsSection({ t }: NewsSectionProps) {
   return (
-    <section id="news" className="border-b border-line bg-canvas py-10 sm:py-12">
+    <section id="news" className="bg-canvas py-3">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal y={16}>
-          <div className="grid gap-6 lg:grid-cols-[13rem_1fr] lg:gap-10">
-            <SectionHeading label="News">{t.news.headline}</SectionHeading>
-            <ol className="divide-y divide-line border-y border-line">
+          <div className="surface-card overflow-hidden">
+            <div className="border-b border-line px-4 py-3 sm:px-5">
+              <SectionHeading label="News">{t.news.headline}</SectionHeading>
+            </div>
+            <ol className="divide-y divide-line">
               {t.news.items.map((item) => {
                 const content = item.href ? (
                   <a
@@ -28,7 +30,7 @@ export function NewsSection({ t }: NewsSectionProps) {
                   item.text
                 );
                 return (
-                  <li key={`${item.date}-${item.text}`} className="grid gap-2 py-3.5 text-sm sm:grid-cols-[6.5rem_1fr] sm:gap-5">
+                  <li key={`${item.date}-${item.text}`} className="grid gap-2 px-4 py-3.5 text-sm sm:grid-cols-[6.5rem_1fr] sm:gap-5 sm:px-5">
                     <time className="font-mono text-[0.8125rem] font-semibold text-muted" dateTime={item.date}>
                       {item.date}
                     </time>

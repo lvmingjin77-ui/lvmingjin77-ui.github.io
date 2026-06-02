@@ -17,3 +17,18 @@ export function gmailComposeHref(email: string): string {
 
 /** 证件照：放在 public/ 下 */
 export const PROFILE_PHOTO_SRC = "/证件照.jpg";
+
+/** 左侧个人栏轮播图 */
+export const PROFILE_PHOTO_SLIDES = [
+  "/证件照.jpg",
+  "/profile-1.jpg",
+  "/profile-2.jpg",
+  "/profile-3.jpg",
+  "/profile-4.jpg",
+];
+
+/** 微信二维码 */
+export const WECHAT_QR_SRC = "/wechat-qr.jpg";
+
+/** 实验室主页 */
+export const LAB_HREF = "https://media.hust.edu.cn/";

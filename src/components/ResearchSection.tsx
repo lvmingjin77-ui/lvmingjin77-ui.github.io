@@ -9,20 +9,20 @@ type ResearchSectionProps = {
 export function ResearchSection({ t }: ResearchSectionProps) {
   const { research: r } = t;
   return (
-    <section id="research" className="scroll-mt-20 border-b border-line bg-canvas py-12 sm:py-14">
+    <section id="research" className="scroll-mt-20 bg-canvas py-3">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal y={16}>
-          <div className="grid gap-6 lg:grid-cols-[13rem_1fr] lg:gap-10">
-            <div>
+          <div className="surface-card overflow-hidden">
+            <div className="border-b border-line px-4 py-3 sm:px-5">
               <SectionHeading label={r.label}>{r.headline}</SectionHeading>
-              <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{r.intro}</p>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">{r.intro}</p>
             </div>
 
-            <ol className="space-y-5">
+            <ol className="divide-y divide-line">
               {r.papers.map((p) => (
                 <li key={p.title}>
-                  <article className="rounded-lg border border-line bg-surface p-4 sm:p-5">
-                    <div className="grid gap-5 lg:grid-cols-[1fr_13rem] lg:items-start">
+                  <article className="p-4 sm:p-5">
+                    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)] lg:items-center">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2 font-mono text-[0.72rem] font-semibold uppercase tracking-[0.1em]">
                           <span className="text-accent">{p.year}</span>
@@ -70,7 +70,7 @@ export function ResearchSection({ t }: ResearchSectionProps) {
                           href={p.href ?? p.imageSrc}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block overflow-hidden rounded-md border border-line bg-white"
+                          className="block w-full overflow-hidden rounded-md border border-line bg-canvas"
                         >
                           <img
                             src={p.imageSrc}

@@ -1,4 +1,4 @@
-import { SITE_EMAIL, PERSONAL_EMAIL, gmailComposeHref } from "./constants";
+import { SITE_EMAIL, PERSONAL_EMAIL, gmailComposeHref, LAB_HREF } from "./constants";
 
 export type Lang = "zh" | "en";
 
@@ -65,6 +65,12 @@ export type Messages = {
     role: string;
     lede: string;
     blurb: string;
+    about: {
+      headline: string;
+      paragraphs: string[];
+      labLabel: string;
+      labHref: string;
+    };
     skillGroups: { label: string; items: string[] }[];
     contactIntro: string;
     emailsBlock: { label: string; items: HeroEmailRow[] };
@@ -116,6 +122,7 @@ export type Messages = {
   contact: {
     label: string;
     line: string;
+    lastUpdated: string;
     emailWebComposeHint: string;
     footerChannels: { label: string; value: string; href: string }[];
   };
@@ -164,10 +171,18 @@ export const messages: Record<Lang, Messages> = {
       photoAlt: "吕明锦证件照",
       status: "华中科技大学 · 计算机技术硕士在读",
       name: "吕明锦",
-      role: "M.Sc. Student in Computer Technology",
-      lede: "研究计算机视觉中的多目标跟踪、轨迹推理，以及面向复杂任务的多智能体系统编排。",
-      blurb:
-        "我关注可复现实验与可落地系统之间的连接：一方面做高密度目标跟踪和运动建模，另一方面探索 Agent 在金融投研、自动化决策与工程工作流中的稳定部署。",
+      role: "",
+      lede: "",
+      blurb: "",
+      about: {
+        headline: "About Me",
+        paragraphs: [
+          "我是华中科技大学计算机技术硕士研究生，主要关注计算机视觉、智能系统与工程化 AI 应用。此前在软件工程、视觉算法和多智能体系统方向积累了项目与实习经验。",
+          "目前我在华中科技大学媒体相关实验室参与学习和科研工作，围绕视觉理解、智能媒体与可部署系统展开探索。实验室主页可在下方链接中查看。",
+        ],
+        labLabel: "HUST Media Lab",
+        labHref: LAB_HREF,
+      },
       skillGroups: [
         { label: "Research", items: ["Multi-Object Tracking", "Trajectory Reasoning", "Multi-Agent Systems"] },
         { label: "Methods", items: ["Attention", "MoE", "SSM", "SFT / GRPO"] },
@@ -186,7 +201,7 @@ export const messages: Record<Lang, Messages> = {
         { label: "微信", value: "lmj7926" },
         { label: "简历 PDF", value: "下载简历", href: "/简历-吕明锦.pdf" },
       ],
-      availability: "欢迎通过邮件联系校招、实习、论文交流与技术合作。",
+      availability: "",
       researchFocus: {
         label: "Research Interests",
         items: ["Dense multi-object tracking", "Motion reasoning with MoE/SSM", "Agentic decision systems"],
@@ -343,13 +358,13 @@ export const messages: Record<Lang, Messages> = {
           },
         ],
       },
-      belief:
-        "我更愿意把主页做成可检索、可验证的学术索引：论文、代码、实验方向、工程经历都应该能被快速定位。",
+      belief: "",
       stack: "常用栈：Python · C++ · PyTorch · Linux · Git · Multi-Agent · Computer Vision",
     },
     contact: {
       label: "联络",
-      line: "欢迎通过邮件联系论文交流、实习机会、校招沟通或技术合作。",
+      line: "",
+      lastUpdated: "最后更新：2026.06",
       emailWebComposeHint: "在 Gmail 网页中新标签页打开撰写（需登录 Google）",
       footerChannels: [
         { label: "学校邮箱", value: SITE_EMAIL, href: gmailComposeHref(SITE_EMAIL) },
@@ -369,10 +384,18 @@ export const messages: Record<Lang, Messages> = {
       photoAlt: "Portrait of Mingjin Lü",
       status: "M.Sc. Computer Technology, Huazhong University of Science and Technology",
       name: "Mingjin Lü",
-      role: "M.Sc. Student in Computer Technology",
-      lede: "I study multi-object tracking, trajectory reasoning, and multi-agent orchestration for complex decision workflows.",
-      blurb:
-        "My work connects reproducible experiments with deployable systems: dense visual tracking and motion modeling on one side, and stable agent workflows for finance, automation, and engineering tasks on the other.",
+      role: "",
+      lede: "",
+      blurb: "",
+      about: {
+        headline: "About Me",
+        paragraphs: [
+          "I am a graduate student in Computer Technology at Huazhong University of Science and Technology, with interests in computer vision, intelligent systems, and engineering-oriented AI applications.",
+          "I currently work and study in a media-related laboratory at HUST, exploring visual understanding, intelligent media, and deployable AI systems. The lab homepage is linked below.",
+        ],
+        labLabel: "HUST Media Lab",
+        labHref: LAB_HREF,
+      },
       skillGroups: [
         { label: "Research", items: ["Multi-Object Tracking", "Trajectory Reasoning", "Multi-Agent Systems"] },
         { label: "Methods", items: ["Attention", "MoE", "SSM", "SFT / GRPO"] },
@@ -391,7 +414,7 @@ export const messages: Record<Lang, Messages> = {
         { label: "WeChat", value: "lmj7926" },
         { label: "Resume PDF", value: "Download PDF", href: "/简历-吕明锦.pdf" },
       ],
-      availability: "Please reach out by email for internships, campus hiring, research discussions, or collaboration.",
+      availability: "",
       researchFocus: {
         label: "Research Interests",
         items: ["Dense multi-object tracking", "Motion reasoning with MoE/SSM", "Agentic decision systems"],
@@ -548,13 +571,13 @@ export const messages: Record<Lang, Messages> = {
           },
         ],
       },
-      belief:
-        "I prefer the site to behave like a searchable academic index: papers, code, research interests, and engineering work should be easy to verify.",
+      belief: "",
       stack: "Stack: Python · C++ · PyTorch · Linux · Git · Multi-Agent · Computer Vision",
     },
     contact: {
       label: "Contact",
-      line: "Please reach out by email for research discussions, internships, campus hiring, or technical collaboration.",
+      line: "",
+      lastUpdated: "Last updated: Jun 2026",
       emailWebComposeHint: "Opens Gmail compose in a new tab (Google sign-in required)",
       footerChannels: [
         { label: "HUST email", value: SITE_EMAIL, href: gmailComposeHref(SITE_EMAIL) },

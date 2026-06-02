@@ -21,10 +21,10 @@ export function Header({ lang, theme, t, onToggleLang, onToggleTheme }: HeaderPr
 
   return (
     <>
-      <header className="print:hidden fixed left-0 right-0 top-0 z-50 border-b border-line bg-canvas/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <header className="print:hidden fixed left-0 right-0 top-0 z-50 border-b border-line bg-surface/95 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <a href="#about" className="flex min-w-0 items-baseline gap-2 outline-offset-4">
-            <span className="font-display text-base font-semibold text-ink">Mingjin Lü</span>
+            <span className="truncate font-display text-base font-semibold text-ink">Mingjin Lü</span>
             <span className="hidden font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted sm:inline">Academic Homepage</span>
           </a>
 
@@ -39,7 +39,7 @@ export function Header({ lang, theme, t, onToggleLang, onToggleTheme }: HeaderPr
             </a>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={onToggleTheme}
@@ -51,7 +51,7 @@ export function Header({ lang, theme, t, onToggleLang, onToggleTheme }: HeaderPr
             <button
               type="button"
               onClick={onToggleLang}
-              className="rounded border border-line px-3 py-2 font-mono text-[0.78rem] font-semibold uppercase tracking-[0.12em] text-ink transition hover:border-accent/35 hover:text-accent"
+              className="hidden rounded border border-line px-3 py-2 font-mono text-[0.78rem] font-semibold uppercase tracking-[0.12em] text-ink transition hover:border-accent/35 hover:text-accent sm:block"
             >
               {lang === "zh" ? "EN" : "中文"}
             </button>
@@ -71,9 +71,18 @@ export function Header({ lang, theme, t, onToggleLang, onToggleTheme }: HeaderPr
         <div className="print:hidden fixed inset-0 z-[60] bg-canvas lg:hidden">
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
             <span className="font-display text-base font-semibold text-ink">Mingjin Lü</span>
-            <button type="button" className="rounded border border-line p-2 text-ink" aria-label="Close" onClick={() => setOpen(false)}>
-              <CloseIcon />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onToggleLang}
+                className="rounded border border-line px-3 py-2 font-mono text-[0.78rem] font-semibold uppercase tracking-[0.12em] text-ink"
+              >
+                {lang === "zh" ? "EN" : "中文"}
+              </button>
+              <button type="button" className="rounded border border-line p-2 text-ink" aria-label="Close" onClick={() => setOpen(false)}>
+                <CloseIcon />
+              </button>
+            </div>
           </div>
           <nav className="flex flex-col px-6 pt-3 font-display text-2xl font-semibold text-ink">
             {links.map((l) => (

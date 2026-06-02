@@ -9,18 +9,18 @@ type WorkBentoProps = {
 export function WorkBento({ t }: WorkBentoProps) {
   const { work } = t;
   return (
-    <section id="work" className="scroll-mt-20 border-b border-line bg-canvas py-12 sm:py-14">
+    <section id="work" className="scroll-mt-20 bg-canvas py-3">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal y={16}>
-          <div className="grid gap-6 lg:grid-cols-[13rem_1fr] lg:gap-10">
-            <div>
+          <div className="surface-card overflow-hidden">
+            <div className="border-b border-line px-4 py-3 sm:px-5">
               <SectionHeading label={work.label}>{work.headline}</SectionHeading>
-              <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{work.intro}</p>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">{work.intro}</p>
             </div>
 
-            <div className="space-y-4">
+            <div className="divide-y divide-line">
               {work.items.map((item) => (
-                <article key={item.title} className="rounded-lg border border-line bg-surface p-4 sm:p-5">
+                <article key={item.title} className="p-4 sm:p-5">
                   <div className="grid gap-4 md:grid-cols-[1fr_12rem] md:gap-6">
                     <div className="min-w-0">
                       <p className="font-mono text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-accent">{item.context}</p>
@@ -55,7 +55,7 @@ export function WorkBento({ t }: WorkBentoProps) {
                 </article>
               ))}
 
-              <article className="rounded-lg border border-dashed border-line bg-canvas p-4 sm:p-5">
+              <article className="bg-canvas/65 p-4 sm:p-5">
                 <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-start">
                   <div>
                     <p className="font-mono text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-muted">{work.toyShelf.badge}</p>
